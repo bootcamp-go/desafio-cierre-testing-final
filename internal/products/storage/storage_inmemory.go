@@ -1,24 +1,34 @@
 package storage
 
 // NewStorageProductInMemory returns a new instance of StorageProductInMemory.
-func NewStorageProductInMemory() *StorageProductInMemory {
-	return &StorageProductInMemory{products: make(map[int]*Product)}
+func NewStorageProductInMemory(db map[int]*Product) *StorageProductInMemory {
+	return &StorageProductInMemory{db: db}
 }
 
 // StorageProductInMemory is an in-memory implementation of StorageProduct.
 type StorageProductInMemory struct {
-	products map[int]*Product
+	db map[int]*Product
 }
 
 // GetProducts returns a product by its id.
 func (s *StorageProductInMemory) GetProducts(query *QueryParams) (ps []*Product, err error) {
-	for _, p := range s.products {
-		// check is query is not none and filter by id
-		if query.Id != 0 {
-			if p.Id == query.Id {
-				ps = append(ps, p)
+	ps = []*Product{}
+
+	// load and filter products
+	for _, p := range s.db {
+		// check if filter is set
+		if query != nil && query.Id > 0 {
+			// filter by id
+			if query.Id != p.Id {
+				continue
 			}
+
+			// others
+			// ...
 		}
+
+		// add product
+		ps = append(ps, p)
 	}
 
 	return

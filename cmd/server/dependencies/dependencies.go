@@ -25,7 +25,8 @@ type App struct {
 func (a *App) Run() (err error) {
 	// dependencies
 	// -> storage
-	storageProduct := storage.NewStorageProductInMemory()
+	db := make(map[int]*storage.Product)
+	storageProduct := storage.NewStorageProductInMemory(db)
 	// -> controllers
 	controllerProduct := handlers.NewControllerProduct(storageProduct)
 
